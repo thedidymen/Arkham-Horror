@@ -1,0 +1,1 @@
+building an arkham horror app. Folliwing the rules of the game and expansions. Adding an interface to control the investigators. On local machine or by network. bla bla bal
