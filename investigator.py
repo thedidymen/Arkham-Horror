@@ -9,15 +9,18 @@ class Investigator(object):
 		self.forename = forename
 		self.surename = surename
 		self.occupation = occupation
-		self.stamina = SpendableEssence("Stamina", 5, 5)
-		self.sanity = SpendableEssence("Sanity", 5, 5)
-		self.focus = SpendableEssence("Focus", 5, 5)
+		self.stamina = SpendableEssence("Stamina", stamina, stamina)
+		self.sanity = SpendableEssence("Sanity", sanity, sanity)
+		self.focus = SpendableEssence("Focus", focus, focus)
+		self.hands = SpendableEssence("Hands", 2, 2)
 		self.items = items
 		self.allies = allies
 		self.skills = skills
 		self.money = money
 		self.cluetokens = cluetokens
 		self.location = location
+		self.monsterthrophies = []
+		self.gatethrophies = []
 	def __repr__(self):
 		return "Investigator: " + self.forname + " " + self.lastname
 	def move(newLocation):
@@ -29,7 +32,11 @@ class Investigator(object):
 	def spendFocus(change):
 		"""spend focus up to the max focus"""
 	def gainFocus(change):
-		"""Gain focus to the max"""
+		"""Gain focus to the max (depending on environment?)"""
+	def gainItems(item):
+		"""add item to item-list"""
+	def loseItem(item):
+		"""pop item from list, returns item?"""
 
 
 
@@ -49,7 +56,10 @@ class SpendableEssence(object):
 		else:
 			raise ValueError("Essence cannot be higher than MaxEssence or lower than 1")
 	def __repr__(self):
-		return self.Name + "[" + str(self.Essence) + "/" + str(self.MaxEssence) + "]" 
+		return self.Name + "[" + str(self.Essence) + "/" + str(self.MaxEssence) + "]"
+	def SpendEssence(change):
+		"""Gain or lose Essence between 1 and max. returns True if succes or maxed out, False if drops to zero or lower. If somehow, 
+		stamina and sanity drops too, or below zero, player is devoured. """
 
 class Skills(object):
 	"""will take a dict {"Skill": int} with starting value and a dict with skill 
@@ -69,11 +79,11 @@ class Skills(object):
 	def buildingskillrow(pair, startingvalues):
 		"""adds two entries to skilltable with list of values (1 up and 1 down) 
 		and sets up skillpairs"""
-	def buildingtable()
+	def buildingtable():
 		"""run buildingskillrow 3 times for making table compleet"""
-	def settingcurrentskill()
-		"""sets staring values for currentskill"""
-	def focusingskills(pair, steps)
+	def settingcurrentskill():
+		"""sets starting values for currentskill"""
+	def focusingskills(pair, steps):
 		"""changes currentskill for pair with steps according skilltable. keeps boundries"""
 		
 		
