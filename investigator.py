@@ -21,6 +21,7 @@ class Investigator(object):
 		self.location = location
 		self.monsterthrophies = []
 		self.gatethrophies = []
+		self.specials = []
 	def __repr__(self):
 		return "Investigator: " + self.forname + " " + self.lastname
 	def move(newLocation):
