@@ -48,7 +48,8 @@ class building(location):
 		self.stability = stability
 		if self.stability == False:
 			self.gates = []
-		self.encountertypes = encountertypes
+		self.EncouterArkham = deck()
+		#self.buildingaction = buildingaction
 		
 
 class street(location):
@@ -67,5 +68,6 @@ class otherworld(object):
 		self.name = name
 		self.expansion = expansion
 		self.left = location(name=self.name, expansion=self.expansion)
-		self.right = location()
+		self.right = location(name=self.name, expansion=self.expansion)
+		self.encoutersOtherworld = deck()
 		

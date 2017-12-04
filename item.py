@@ -1,8 +1,13 @@
 class Item(object):
-	"""docstring for Item"""
-	def __init__(self, Name,):
+	"""docstring for Item
+	exhaustable creates the self.exhausted option, if the item of part of the item could get exhausted. Upkeep(phase) will look 
+	for this attribute and refresh if present. is there a beter way of getting this done?
+	"""
+	def __init__(self, Name, exhaustable=False):
 		super(Item, self).__init__()
 		self.Name = Name
+		if exhaustable:
+			self.exhausted = False
 
 
 class Spell(Item):

@@ -23,7 +23,7 @@ class Investigator(object):
 		self.gatethrophies = []
 		self.specials = []
 	def __repr__(self):
-		return "Investigator: " + self.forname + " " + self.lastname
+		return "Investigator: " + self.forname + " " + self.surname
 	def move(newLocation):
 		"""moves to new location"""
 	def changemoney(change):
