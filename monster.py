@@ -18,17 +18,17 @@ class Monster(object):
 
 
 class Yellow(Monster):
-			"""docstring for Yellow"""
-			def __init__(self, arg):
-				super(Yellow, self).__init__()
-				self.arg = arg
+	"""docstring for Yellow"""
+	def __init__(self, arg):
+		super(Yellow, self).__init__()
+		self.arg = arg
 
 
 class Red(Monster):
-			"""docstring for Ret"""
-			def __init__(self, arg):
-				super(Red, self).__init__()
-				self.arg = arg
+	"""docstring for Ret"""
+	def __init__(self, arg):
+		super(Red, self).__init__()
+		self.arg = arg
 
 
 class Green(Monster):
