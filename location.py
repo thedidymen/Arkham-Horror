@@ -49,6 +49,7 @@ class building(location):
 		if self.stability == False:
 			self.gates = []
 		self.EncouterArkham = deck()
+		self.open = True
 		#self.buildingaction = buildingaction
 		
 

@@ -19,43 +19,78 @@ class Phase(object):
 		numberofsucces => hits needed
 		succes => what is a succes (format?) 
 		"""
-	def Battlefield(monsters):
+	def InvestigatorHeathCheck():
 		"""
-		NEEDS WORK!!!!
-		takes all monsters of a location, if all monster are evade you can keep moving
-		PlayerChoice(function) which monster first
-		PlayerChoice(function) Combat or Evade
-		evade:
-			true: next monster
-			false: combat
-		combat: 
-			true: fightorflight(evaded)
-			false: remove monster from location and return false
+		checks if player is still conscious.
+		Unconscious and insane => devoured
+		Unconscious => to hospital
+		Insane => Asylum
+		Needs games hospitals and asylums
+		PlayersChoice which
+		returns True if healthy, False if deported to Hospital or Asylum
 		"""
-	def Evade(monster):
-		"""returns true if pass, 
-		if fail does monsterdamage and returns false"""
-	def Combat(monster):
-		"""handles combat with a monster... (does it need an investigator? perhaps for mythos phase)
-		=> movement point = 0
-		=> horrorcheck 
-			return true if sane
-			return false if insane
+
+	def Battlefield(investigator, monsters, evaded=[], throphies=[]):
 		"""
-	def fightorflight(evaded):
-		"""PlayerChoice(function) Fight() or Flight()"""
-	def fight():
+		For monster in Monsters
+			PlayerChoice(Evade or Combat)
+			if Evade:
+				if Evade: 
+					Evaded.append(monster)
+					break
+				else: MonsterDamage
+			set movement => 0
+			if horrorcheck:
+				evaded, throphies = fightorflight(investigator, monster, evaded, throphies)
+
+		output: evaded monsters?
+		investigator => gain throphies
+		return
 		"""
-		combat check:
-			pass: monsterthrophie
-			fail: Monsterdamage => FightorFlight()
+
+	def Horrorcheck(investigator, monster):
 		"""
-	def flight():
+		Make a horrorcheck {will + monster horror rating, difficulty 1}
+		investigatorheathcheck
+		returns true if succesful
 		"""
-		Evadecheck:
-			Pass: return evade true for monster
-			fail: monsterdamage => fightorflight
+
+	def Evadecheck(investigator, monster):
 		"""
+		Makes Evadecheck {sneak + monster awareness, difficulty 1}
+		returns true if succesful
+		"""
+
+	def Combatcheck(monster):
+		"""
+		makes Combat check  {fight + used weapons + monster combatrating (+game(AO, Environment), 
+		difficulty: monster thoughtness}
+		returns true if succesful
+		playerschoice(used weapons(including spells))
+		"""
+
+	def fightorflight(investigator, monster, evaded=[], throphies=[]):
+		"""
+		playerchoice(fight or flight)
+		Flight:
+			if Evade: Evaded.append(monster) return evaded, throphies
+			else 
+				MonsterDamage
+				fightorflight(investigator, monster)
+		fight:
+			if Combatcheck: throphies.append(monster), return evaded, throphies
+			else 
+				MonsterDamage
+				fightorflight(investigator, monster)
+		"""
+
+
+	def Monsterdamage(investigator, monster):
+		"""
+		deals monster damage to investigator(spendEssence).
+		investigatorheathcheck
+		"""
+
 
 class Upkeep(Phase):
 	"""

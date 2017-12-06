@@ -10,7 +10,8 @@ class Game(object):
 		self.commonitems = deck()
 		self.uniqueitems = deck()
 		self.spells = deck()
-		
+		self.hospitals = [] # wont change during game, easier te set up once?
+		self.asylums = [] # wont change during game, easier te set up once?
 	def LoadingGame():
 	"""sets up the game. takes investigators, expansions. does not check compatiblity?"""
 	def Victory():
