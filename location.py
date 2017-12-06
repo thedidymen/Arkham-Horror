@@ -1,15 +1,17 @@
 class Investigatorlocation(object):
 	"""docstring for Investigatorlocation"""
-	def __init__(self, investigators):
+	def __init__(self):
 		super(Investigatorlocation, self).__init__()
-		self.investigators = investigators
+		self.investigators = []
+	def investigatormove():
+		pass
 
 
 class Monsterlocation(object):
 	"""docstring for Monsterlocation"""
-	def __init__(self, monsters):
+	def __init__(self):
 		super(Monsterlocation, self).__init__()
-		self.monsters = monsters
+		self.monsters = []
 		
 		
 class Outskirt(Monsterlocation):
@@ -38,6 +40,7 @@ class location(Investigatorlocation, Monsterlocation):
 		super(location, self).__init__()
 		self.name = name
 		self.expansion = expansion
+
 		
 
 class building(location):
@@ -48,6 +51,7 @@ class building(location):
 		self.stability = stability
 		if self.stability == False:
 			self.gates = []
+			self.seal = False
 		self.EncouterArkham = deck()
 		self.open = True
 		#self.buildingaction = buildingaction
@@ -68,7 +72,8 @@ class otherworld(object):
 		self.colors = colors
 		self.name = name
 		self.expansion = expansion
-		self.left = location(name=self.name, expansion=self.expansion)
-		self.right = location(name=self.name, expansion=self.expansion)
+		self.left = []
+		self.right = []
 		self.encoutersOtherworld = deck()
+
 		

@@ -124,28 +124,75 @@ class Movement(Phase):
 		super(Movement, self).__init__()
 		self.Investigator = Investigator
 	def start():
-		""""""
+		"""
+		if delayed: standup and return
+		gainmovement():
+		while movement > 0:
+			if isinstance(investigator.location, otherworld):
+				self.otherworldmovement()
+				movementpts = 0
+			else:
+				playerchoice(move to exit, spend movementpts on special cards, do nothing)
+				if move => arkhammove
+				if special cards: => special card
+				if nothing: movementpts = 0
+		gaincluetokens()
+		"""
+	def arkhammove():
+		"""
+		if monsters in currenlocation:
+			battlefield (monsters)
+			if movementpts > 0:
+				move
+				if gate move to otherworld
+		"""
 	def gainMovement():
 		"""player gains movementpoints equel to speed - Game(OA, environment)"""
+	def otherworldmovement():
+		"""	
+		if investigator in investigator.location.left:
+			investigator.location.right = investigator.location.left.pop(investigator)
+		else if investigator in investigator.location.right:
+			if gate to otherworld:
+				playerchoice(gate locations in arkham)
+				gate explored by investigator
+			else:
+				lost in time and space
+		"""
+	def specialcard():
+		"""do special card stuff"""
+	def gaincluetokens():
+		"""add cluetokens of location to investigators stash"""
+	def standup():
+		"""
+		investigator.delayed = False
+		return
+		"""
+
 
 
 
 class ArkhamEncounters(Phase):
-	"""
-	ArkhamEncounters:
-	if gate:
-		if explored:
-			close gate
-			optional: seal gate
-		if not explored:
-			move to OtherWorld left area
-	if no gate:
-		have encouter:
-		form deck or location
-	"""
+
 	def __init__(self, Investigator):
 		super(ArkhamEncounters, self).__init__()
 		self.Investigator = Investigator
+	def start():
+
+	def closeGate():
+		"""
+		if PlayerChoice(LoreCheck, FightCheck)
+			return True
+		return False
+		"""
+	def SealGate(item):
+		"""
+		if elder:
+			remove doomtoken
+			lose 1 stamina and 1 health
+		Seals location
+		"""
+
 
 class OtherWorldEncounters(Phase):
 	"""

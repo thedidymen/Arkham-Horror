@@ -16,6 +16,7 @@ class Investigator(object):
 		self.items = items
 		self.allies = allies
 		self.skills = skills
+		self.movementpoints = 0
 		self.money = money
 		self.cluetokens = cluetokens
 		self.location = location
@@ -24,8 +25,6 @@ class Investigator(object):
 		self.specials = []
 	def __repr__(self):
 		return "Investigator: " + self.forname + " " + self.surname
-	def move(newLocation):
-		"""moves to new location"""
 	def changemoney(change):
 		"""adds or reduces amount of money, money cannot get negative"""
 	def changecluetokens(change):
