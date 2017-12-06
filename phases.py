@@ -96,6 +96,7 @@ class Upkeep(Phase):
 	"""
 	Upkeep:
 	- refresh exhausted cards
+	- gain movementpoints
 	- perform upkeep actions:
 		-bank loans, blessed/cursed
 	- adjust skills
@@ -116,44 +117,17 @@ class Upkeep(Phase):
 		of ability (as a list/dict?)"""
 
 
+
 class Movement(Phase):
-	"""
-	Movement:
-	if delayed:
-		delayed => False => end movement
-	if in Arkham:
-		if playes wish to spend movement points on tomes
-		if monster:
-			fight or evade
-		else move
-	if OtherWorld:
-		if right:
-			move to arkham
-		if left:
-			move right
-	"""
+	""""""
 	def __init__(self, Investigator):
 		super(Movement, self).__init__()
 		self.Investigator = Investigator
 	def start():
-		"""sets up all the if statements"""
-	def StandUp():
-		"""if investigator is delayed, undelayed the investigator and end movement"""
-	def Spendmovementpoints():
-		"""spend moventpoints on none movement, like tomes"""
-	def UnspendMovementpoints():
-		"""
-		Present PlayerChoices(function) with all possible option for player: exits, trade, stop moving, activate special cards,
-		if monster present with moving or stopping => BattleField(monsters) 
-		if True => continue (investigator may have 0 movement points left)
-		if false => investigator is insane or unconscius end of his/her turn.
-		"""
-	def exits():
-		"""returns all possible exits for current location + stopping with moving"""
-	def trade():
-		"""returns possible investigators to trade with in current location"""
-	def specialcards():
-		"""returns items with spending movementpoits ability"""
+		""""""
+	def gainMovement():
+		"""player gains movementpoints equel to speed - Game(OA, environment)"""
+
 
 
 class ArkhamEncounters(Phase):
