@@ -10,10 +10,12 @@ class Game(object):
 		self.commonitems = deck()
 		self.uniqueitems = deck()
 		self.spells = deck()
-		self.hospitals = [] # wont change during game, easier te set up once?
-		self.asylums = [] # wont change during game, easier te set up once?
+		self.hospitals = [] # wont change during game, easier to set up once?
+		self.asylums = [] # wont change during game, easier to set up once?
+		self.monsterlimit = 0 # #investigators + 3, can change during the game
+		self.terrorlevel = 0 
 	def LoadingGame():
-	"""sets up the game. takes investigators, expansions. does not check compatiblity?"""
+		"""sets up the game. takes investigators, expansions. does not check compatiblity?"""
 	def Victory():
 		"""
 		returns True when winning condition is achieved else False
