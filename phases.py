@@ -178,19 +178,47 @@ class ArkhamEncounters(Phase):
 		super(ArkhamEncounters, self).__init__()
 		self.Investigator = Investigator
 	def start():
-
+		"""
+		if nogate:
+			Arkhamencouter()
+		if gate && explored:
+			if investigator has 5 cluetokens and eldersign
+				playerchoice(elderseal or clueseal or closegate)
+			else if invesigator has 5 cluetokens:
+				playerchoice(clueseal or closegate)
+			else closegate()
+		if game.victory:
+			game.endgameandfinalscore()
+		"""
+	def Arkhamencouter():
+		"""
+		if in buildinglocation:
+			playerchoice(locationability or encouterdeck)
+		if in street:
+			optional special street stuff
+		(Monsters appering without a gate are either claimed as throphie or returen to the cup)
+		"""
 	def closeGate():
 		"""
 		if PlayerChoice(LoreCheck, FightCheck)
+			investigator gain gatethrophie
+			game.recallmonsters(dimension)
 			return True
 		return False
 		"""
-	def SealGate(item):
+	def ElderSeal():
 		"""
-		if elder:
-			remove doomtoken
-			lose 1 stamina and 1 health
+		remove doomtoken
+		lose 1 stamina and 1 health
 		Seals location
+		investigator gain gatethrophie
+		game.recallmonsters(dimension)
+		"""
+	def ClueSeal():
+		"""
+		if closegate():
+			spend 5 cluetokens
+			seal location
 		"""
 
 
@@ -202,6 +230,10 @@ class OtherWorldEncounters(Phase):
 	def __init__(self, Investigator):
 		super(OtherWorldEncounters, self).__init__()
 		self.Investigator = Investigator
+	def start():
+		"""
+		
+		"""
 
 class Mythos(Phase):
 	"""
@@ -224,4 +256,5 @@ class Mythos(Phase):
 	def __init__(self, arg):
 		super(Mythos, self).__init__()
 		self.arg = arg
-		
+	def start():
+		""""""
