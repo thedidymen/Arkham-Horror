@@ -15,7 +15,7 @@ class Investigator(object):
 		self.hands = SpendableEssence("Hands", 2, 2)
 		self.items = items
 		self.allies = allies
-		self.skills = skills
+		self.skills = skills #import skill class
 		self.movementpoints = 0
 		self.money = money
 		self.cluetokens = cluetokens
@@ -39,7 +39,6 @@ class Investigator(object):
 		"""pop item from list, returns item?"""
 
 
-
 class SpendableEssence(object):
 	"""takes Name (string), Essence(number), MaxEssence(number). the current essence can not be lower than 
 	1 or higher than MaxEssence"""
@@ -61,31 +60,6 @@ class SpendableEssence(object):
 		"""Gain or lose Essence between 1 and max. returns True if succes or maxed out, False if drops to zero or lower. If somehow, 
 		stamina and sanity drops too, or below zero, player is devoured. """
 
-class Skills(object):
-	"""will take a dict {"Skill": int} with starting value and a dict with skill 
-	pairs (key for up, value for down"""
-	def __init__(self, ):
-		super (Skills, self).__init__()
-		self.currentSkill = {"Will": 0, "Fight": 0, "Speed": 0, "Sneak": 0, "Lore": 0, "Luck": 0}
-		self.skilltable = {
-			"Will" : [0,0,0,0], 
-			"Fight" : [0,0,0,0],
-			"Speed" : [0,0,0,0],
-			"Sneak" : [0,0,0,0],
-			"Lore" : [0,0,0,0],
-			"Luck" : [0,0,0,0]
-			}
-		self.skillpairs = {"Speed" : "Sneak", "Fight" : "Will", "Lore" : "Luck"}
-	def buildingskillrow(pair, startingvalues):
-		"""adds two entries to skilltable with list of values (1 up and 1 down) 
-		and sets up skillpairs"""
-	def buildingtable():
-		"""run buildingskillrow 3 times for making table compleet"""
-	def settingcurrentskill():
-		"""sets starting values for currentskill"""
-	def focusingskills(pair, steps):
-		"""changes currentskill for pair with steps according skilltable. keeps boundries"""
-		
 		
 
 		

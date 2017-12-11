@@ -1,46 +1,50 @@
-class Investigatorlocation(object):
-	"""docstring for Investigatorlocation"""
-	def __init__(self):
-		super(Investigatorlocation, self).__init__()
-		self.investigators = []
-	def investigatormove():
-		pass
+class Exits(object):
+	"""docstring for Exits"""
+	def __init__(self, exit={}):
+		super(Exits, self).__init__()
+		self.exits = exit
+	def add(self, key, value):
+		"""takes location object as key and a list as value"""
+		self.exits[key] = value
+	def __repr__(self):
+		s = ""
+		return s.join(['%s: %s \n' % (key, value) for (key, value) in self.exits.items()])
 
 
-class Monsterlocation(object):
-	"""docstring for Monsterlocation"""
-	def __init__(self):
-		super(Monsterlocation, self).__init__()
-		self.monsters = []
-		
-		
-class Outskirt(Monsterlocation):
-	"""docstring for Outskirt"""
-	def __init__(self, name):
-		super(Outskirt, self).__init__()
-		self.name = name
 
-class Sky(Monsterlocation):
-	"""docstring for Sky"""
-	def __init__(self, name):
-		super(Sky, self).__init__()
-		self.name = name
-		
 
-class Lostintimeandspace(Investigatorlocation):
-	"""docstring for Lostintimeandspace"""
-	def __init__(self, name):
-		super(Lostintimeandspace, self).__init__()
-		self.name = name
-		
 
-class location(Investigatorlocation, Monsterlocation):
+class location(object):
 	"""docstring for location"""
-	def __init__(self, name, expansion):
+	def __init__(self, name, expansion, investgatorlocation=True, monsterlocation=True):
 		super(location, self).__init__()
 		self.name = name
 		self.expansion = expansion
+		if investgatorlocation == True:
+			self.investigators = []
+		if monsterlocation == True:
+			self.monsters = []
+		self.exits = Exits()
+	def __repr__(self):
+		return self.name
+		
+		
+class Outskirt(location):
+	"""docstring for Outskirt"""
+	def __init__(self, name, investgatorlocation=False):
+		super(Outskirt, self).__init__()
 
+
+class Sky(location):
+	"""docstring for Sky"""
+	def __init__(self, name, investgatorlocation=False):
+		super(Sky, self).__init__()
+		
+
+class Lostintimeandspace(location):
+	"""docstring for Lostintimeandspace"""
+	def __init__(self, name, monsterlocation=False):
+		super(Lostintimeandspace, self).__init__()
 		
 
 class building(location):
@@ -76,4 +80,17 @@ class otherworld(object):
 		self.right = []
 		self.encoutersOtherworld = deck()
 
-		
+
+if __name__ == '__main__':
+	Warpnet = location(name="Warpnet", expansion="Akrham Horror")
+	Foodfellas = location(name="Foodfellas", expansion="Akrham Horror")
+	Steenhouwerskade = location(name="Steenhouwerskade", expansion="Akrham Horror")
+	Warpnet.exits.add(Foodfellas, ['black', 'white'])
+	Foodfellas.exits.add(Warpnet, [])
+	print Warpnet
+	print Foodfellas
+	print Steenhouwerskade
+	print Warpnet.exits
+	print Foodfellas.exits
+	print Steenhouwerskade.exits
+

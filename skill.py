@@ -1,19 +1,21 @@
 class check(object):
-	"""docstring for check"""
-	def __init__(self, skilldict):
+	"""docstring for check, its basicly a dict, so is the class necessary?  """
+	def __init__(self, will=0, fight=0, speed=0, sneak=0, lore=0, luck=0, horrorcheck=0, evadecheck=0, combatcheck=0):
 		super(check, self).__init__()
-		self.skilldict = skilldict
-		self.exceptiondict = {}
-	def addexception(exception, exceptiondict):
-		"""add exception to exceptiondict in a dict of dict."""
-	def giveskill(skill, **exception):
-		"""returns value of skill. **exception will check if exception is in the exception dict and 
-		will return alternate value if so"""
+		self.skilldict = {
+			"Will": will, 
+			"Fight": fight, 
+			"Speed": speed, 
+			"Sneak": sneak, 
+			"Lore": lore, 
+			"Luck": luck, 
+			"Horrocheck": horrorcheck, 
+			"Evadecheck":evadecheck, 
+			"Combatcheck":combatcheck
+			}
+	def giveskill(skill):
+		"""returns value of skill. """
 		
-
-
-
-
 
 class Investigatorskilltable(object):
 	"""will take a dict {"Skill": int} with starting value and a dict with skill 
@@ -40,3 +42,6 @@ class Investigatorskilltable(object):
 	def focusingskills(pair, steps):
 		"""changes currentskill for pair with steps according skilltable. keeps boundries"""
 		
+if __name__ == '__main__':
+	skil = check(will=1, fight=3)
+	print skil.skilldict
