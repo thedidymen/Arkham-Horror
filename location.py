@@ -1,16 +1,27 @@
-class Exits(object):
-	"""docstring for Exits"""
-	def __init__(self, exit={}):
-		super(Exits, self).__init__()
-		self.exits = exit
-	def add(self, key, value):
-		"""takes location object as key and a list as value"""
-		self.exits[key] = value
+# class Exits(object):
+# 	"""docstring for Exits"""
+# 	def __init__(self):
+# 		super(Exits, self).__init__()
+# 		self.exits = {}
+# 	def add(self, key, value):
+# 		"""takes location object as key and a list as value"""
+# 		self.exits[key] = value
+# 		return
+# 	def __repr__(self):
+# 		return "".join(['%s: %s \n' % (key, value) for (key, value) in self.exits.items()])
+# 	def giveexit(self, color):
+# 		"""takes a color (string), returns list of location with color connection."""
+# 		return [location for location in self.exits.keys() if color in self.exits[location]]
+
+
+class connection(object):
+	"""docstring for connection"""
+	def __init__(self, location, colors):
+		super(connection, self).__init__()
+		self.location = location
+		self.colors = colors
 	def __repr__(self):
-		return "".join(['%s: %s \n' % (key, value) for (key, value) in self.exits.items()])
-	def giveexit(self, color):
-		"""takes a color (string), returns list of location with color connection."""
-		return [location for location in self.exits.keys() if color in self.exits[location]]
+		return str(self.location) + ": " + ", ".join([n for n in self.colors])
 
 
 class location(object):
@@ -23,7 +34,7 @@ class location(object):
 			self.investigators = []
 		if monsterlocation == True:
 			self.monsters = []
-		self.exits = Exits()
+		self.exits = []
 	def __repr__(self):
 		return self.name
 		
@@ -173,12 +184,19 @@ if __name__ == '__main__':
 	    ["Merchant District", {"Downtown": [], "Rivertown": [], "Northside" : ['white'], "Miskatonic University" : ['black'] }],
 		]
 
-	# print Locations
-	print connections
-
-	loc = []
-	for l in Locations:
-		print l[0], l[1]
-		loc.append(location(expansion=l[0], name=l[1]))
-	
-
+if __name__ == '__main__':
+	loc = [location(expansion=l[0], name=l[1]) for l in Locations]
+	for n in range(len(loc)):
+		if loc[n].name == connections[n][0]:
+			for connectedlocation in connections[n][1].keys():
+				for i in loc:
+					if i.name == connectedlocation:
+						clobj = i
+						break
+				loc[n].exits.append(connection(location=clobj, colors=connections[n][1][connectedlocation]))
+	for n in loc:
+		print
+		print n.name
+		print "exits into"
+		for m in n.exits:
+			print m

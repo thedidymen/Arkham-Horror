@@ -1,30 +1,41 @@
 from types import *
+from skill import *
 
 
 class Investigator(object):
 	"""This class contains all possible action of an investigator within the game 
 	of Arkham Horror."""
-	def __init__(self, forename, surename, occupation, stamina, sanity, focus, items, allies, skills, money, cluetokens, location):
+	def __init__(self, forename, surname, occupation, stamina, sanity, focus, location, items=[], allies=[], skills=[], money=0, cluetokens=0):
 		super(Investigator, self).__init__()
 		self.forename = forename
-		self.surename = surename
+		self.surname = surname
 		self.occupation = occupation
 		self.stamina = SpendableEssence("Stamina", stamina, stamina)
 		self.sanity = SpendableEssence("Sanity", sanity, sanity)
 		self.focus = SpendableEssence("Focus", focus, focus)
 		self.hands = SpendableEssence("Hands", 2, 2)
+		self.delayed = False
 		self.items = items
 		self.allies = allies
-		self.skills = skills #import skill class
+		self.skills = check(speed = 3) # temp value for speed, to get movement up and running
 		self.movementpoints = 0
 		self.money = money
 		self.cluetokens = cluetokens
-		self.location = location
+		self.location = None
+		self.move(location)
 		self.monsterthrophies = []
 		self.gatethrophies = []
 		self.specials = []
 	def __repr__(self):
-		return "Investigator: " + self.forname + " " + self.surname
+		return "Investigator: " + self.forename + " " + self.surname
+	def move(self, newlocation):
+		"""Pop investigator from current location, and moves self to newlocation, updates self.location. 
+		Does a self move for the start of the game"""
+		if self.location == None:
+			newlocation.investigators.append(self)
+		else:
+			newlocation.investigators.append(self.location.investigators.pop(self))
+		self.location = newlocation
 	def changemoney(change):
 		"""adds or reduces amount of money, money cannot get negative"""
 	def changecluetokens(change):
@@ -37,6 +48,9 @@ class Investigator(object):
 		"""add item to item-list"""
 	def loseItem(item):
 		"""pop item from list, returns item?"""
+	def gainmovement(self, pts):
+		"""sets movement to pts. taks pts as interger. """
+		self.movementpoints = pts
 
 
 class SpendableEssence(object):
@@ -93,4 +107,9 @@ if __name__ == '__main__':
 	testInvestigator()
 	testSpendableEssence()
 
-		
+	Investigatordata = [
+			["Agnes", "Baker", "Waitress", "Velma's Diner", 5, 5, 2]
+			["\"Ashcan\"", "Pete", "Drifter", "River Docks", 4, 6, 1]
+			["Jenny", "Barnes", "Dilettante", "Train Station", 6, 4, 1]
+			["Harvey", "Walters", "Professor", "Administration Building", 7, 3, 2]
+		]

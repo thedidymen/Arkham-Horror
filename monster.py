@@ -15,6 +15,7 @@ class Monster(object):
 		self.name = name
 		self.flavortext = flavortext
 		self.text = text
+		self.location = None
 
 
 class Yellow(Monster):

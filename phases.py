@@ -1,3 +1,5 @@
+
+
 class Phase(object):
 	"""
 	contains all the action needed through out each phase: 
@@ -101,11 +103,12 @@ class Upkeep(Phase):
 		-bank loans, blessed/cursed
 	- adjust skills
 	"""
-	def __init__(self, Investigator):
+	def __init__(self, game):
 		super(Upkeep, self).__init__()
-		self.Investigator = Investigator
-	def start():
+		self.game = game
+	def start(self, investigator):
 		"""starts upkeep loop for this investigator"""
+		print "Upkeep for:", investigator
 	def refresh():
 		"""loops over investigator items, if hasattr(item, exhausted) ==> item.exhausted == true"""
 	def gainBenefits():
@@ -120,10 +123,10 @@ class Upkeep(Phase):
 
 class Movement(Phase):
 	""""""
-	def __init__(self, Investigator):
+	def __init__(self, game):
 		super(Movement, self).__init__()
-		self.Investigator = Investigator
-	def start():
+		self.game = game
+	def start(self, investigator):
 		"""
 		if delayed: standup and return
 		gainmovement():
@@ -138,7 +141,22 @@ class Movement(Phase):
 				if nothing: movementpts = 0
 		gaincluetokens()
 		"""
-	def arkhammove():
+		print "Movement for:", investigator
+		if investigator.delayed:
+			investigator.delayed = True
+			return
+		else:
+			self.gainMovement(investigator)
+		print "currentmoventpoints: ", investigator.movementpoints
+		while investigator.movementpoints > 0:
+			if isinstance(investigator.location, otherworld):
+				self.otherworldmovement()
+				investigator.gainmovement(0)
+			else:
+				pass
+
+
+	def arkhammove(self, game):
 		"""
 		if monsters in currenlocation:
 			battlefield (monsters)
@@ -146,9 +164,10 @@ class Movement(Phase):
 				move
 				if gate move to otherworld
 		"""
-	def gainMovement():
+	def gainMovement(self, investigator):
 		"""player gains movementpoints equel to speed - Game(OA, environment)"""
-	def otherworldmovement():
+		investigator.gainmovement(investigator.skills.getskill("Speed")) #+ game.OA.skills + mythos.skill + ...
+	def otherworldmovement(self):
 		"""	
 		if investigator in investigator.location.left:
 			investigator.location.right = investigator.location.left.pop(investigator)
@@ -159,25 +178,21 @@ class Movement(Phase):
 			else:
 				lost in time and space
 		"""
-	def specialcard():
+		print "otherworld movement"
+	def specialcard(self):
 		"""do special card stuff"""
-	def gaincluetokens():
+	def gaincluetokens(self):
 		"""add cluetokens of location to investigators stash"""
-	def standup():
-		"""
-		investigator.delayed = False
-		return
-		"""
 
 
 
 
-class ArkhamEncounters(Phase):
+class ArkhamEncounter(Phase):
 
-	def __init__(self, Investigator):
-		super(ArkhamEncounters, self).__init__()
-		self.Investigator = Investigator
-	def start():
+	def __init__(self, game):
+		super(ArkhamEncounter, self).__init__()
+		self.game = game
+	def start(self, investigator):
 		"""
 		if nogate:
 			Arkhamencouter()
@@ -187,9 +202,11 @@ class ArkhamEncounters(Phase):
 			else if invesigator has 5 cluetokens:
 				playerchoice(clueseal or closegate)
 			else closegate()
-		if game.victory:
-			game.endgameandfinalscore()
+		# checking after every phase in mainloop.
+		# if game.victory:  
+		# 	game.endgameandfinalscore()
 		"""
+		print "Arkham Encouter for:", investigator
 	def Arkhamencouter():
 		"""
 		if in buildinglocation:
@@ -227,13 +244,14 @@ class OtherWorldEncounters(Phase):
 	OtherWorldEncounters:
 	- draw otherworld encouters till match of colors
 	"""
-	def __init__(self, Investigator):
+	def __init__(self, game):
 		super(OtherWorldEncounters, self).__init__()
-		self.Investigator = Investigator
-	def start():
+		self.game = game
+	def start(self, investigator):
 		"""
 		
 		"""
+		print "Otherworld Encouter for:", investigator
 
 class Mythos(Phase):
 	"""
@@ -253,8 +271,9 @@ class Mythos(Phase):
 	move monsters
 	activate mythos ability
 	"""
-	def __init__(self, arg):
+	def __init__(self, game):
 		super(Mythos, self).__init__()
-		self.arg = arg
-	def start():
+		self.game = game
+	def start(self):
 		""""""
+		print "Mythos time..."

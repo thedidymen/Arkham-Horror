@@ -1,3 +1,9 @@
+
+		
+
+
+
+
 class Gate(object):
 	"""docstring for Gate"""
 	def __init__(self, location, dimension, modifier, otherworld, name, expansion):

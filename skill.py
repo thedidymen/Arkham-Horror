@@ -10,11 +10,12 @@ class check(object):
 			"Lore": lore, 
 			"Luck": luck, 
 			"Horrocheck": horrorcheck, 
-			"Evadecheck":evadecheck, 
-			"Combatcheck":combatcheck
+			"Evadecheck": evadecheck, 
+			"Combatcheck": combatcheck
 			}
-	def giveskill(skill):
+	def getskill(self, skill):
 		"""returns value of skill. """
+		return self.skilldict[skill]
 		
 
 class Investigatorskilltable(object):
