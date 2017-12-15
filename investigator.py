@@ -32,10 +32,13 @@ class Investigator(object):
 		"""Pop investigator from current location, and moves self to newlocation, updates self.location. 
 		Does a self move for the start of the game"""
 		if self.location == None:
-			newlocation.investigators.append(self)
+			newlocation.arrive(self)
+			self.location = newlocation
+			return
 		else:
-			newlocation.investigators.append(self.location.investigators.pop(self))
+			newlocation.arrive(self.location.depart(self))
 		self.location = newlocation
+		self.movementpoints -= 1
 	def changemoney(change):
 		"""adds or reduces amount of money, money cannot get negative"""
 	def changecluetokens(change):

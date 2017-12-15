@@ -36,6 +36,7 @@ Locations = [
 	    ["Arkham Horror", "Southside"],
 	    ["Arkham Horror", "Merchant District"],
 	]
+
 connections = [
 	    ["Ye Olde Magick Shoppe", {"Uptown" : ['black', 'white'] }], 
 	    ["Woods", {"Uptown" : ['black', 'white'] }],
@@ -80,4 +81,15 @@ Investigatordata = [
 		["\"Ashcan\"", "Pete", "Drifter", "River Docks", 4, 6, 1],
 		["Jenny", "Barnes", "Dilettante", "Train Station", 6, 4, 1],
 		["Harvey", "Walters", "Professor", "Administration Building", 7, 3, 2],
+	]
+
+Otherworlds = [
+	    ["Arkham Horror", "Another Dimension", ["Blue", "Green", "Red", "Yellow"]],
+	    ["Arkham Horror", "Great Hall of Celano", ["Blue", "Green"]],
+	    ["Arkham Horror", "Plateau of Leng", ["Green", "Red"]],
+	    ["Arkham Horror", "R'lyeh", ["Red", "Yellow"]],
+	    ["Arkham Horror", "The Abyss", ["Blue","Red"]],
+	    ["Arkham Horror", "City of the Great Race", ["Green", "Yellow"]],
+	    ["Arkham Horror", "The Dreamlands", ["Blue", "Green", "Red", "Yellow"]],
+	    ["Arkham Horror", "Yuggoth", ["Blue", "Yellow"]]
 	]

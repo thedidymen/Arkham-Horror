@@ -1,4 +1,4 @@
-
+import random as rnd
 
 class Phase(object):
 	"""
@@ -10,18 +10,18 @@ class Phase(object):
 	"""
 	def __init__(self):
 		super(Phase, self).__init__()
-	def die(numberofdie):
+	def die(self, numberofdie):
 		"""returns list of die results"""
-	def SumofSkills():
+	def SumofSkills(self, ):
 		"""Adds skill modifiers of all components of the game: event, AO, Environment, items, investigator...."""
-	def Skillcheck(Skill, SumofSkills, numberofsucces, succes):
+	def Skillcheck(self, Skill, SumofSkills, numberofsucces, succes):
 		"""
 		skill => the skill to check for
 		sumofskills => gives number of die for skill check
 		numberofsucces => hits needed
 		succes => what is a succes (format?) 
 		"""
-	def InvestigatorHeathCheck():
+	def InvestigatorHeathCheck(self):
 		"""
 		checks if player is still conscious.
 		Unconscious and insane => devoured
@@ -32,9 +32,9 @@ class Phase(object):
 		returns True if healthy, False if deported to Hospital or Asylum
 		"""
 
-	def Battlefield(investigator, monsters, evaded=[], throphies=[]):
+	def Battlefield(self, investigator, evaded=[], throphies=[]):
 		"""
-		For monster in Monsters
+		For monster in investigator.location.monsters:
 			PlayerChoice(Evade or Combat)
 			if Evade:
 				if Evade: 
@@ -49,21 +49,22 @@ class Phase(object):
 		investigator => gain throphies
 		return
 		"""
+		pass
 
-	def Horrorcheck(investigator, monster):
+	def Horrorcheck(self, investigator, monster):
 		"""
 		Make a horrorcheck {will + monster horror rating, difficulty 1}
 		investigatorheathcheck
 		returns true if succesful
 		"""
 
-	def Evadecheck(investigator, monster):
+	def Evadecheck(self, investigator, monster):
 		"""
 		Makes Evadecheck {sneak + monster awareness, difficulty 1}
 		returns true if succesful
 		"""
 
-	def Combatcheck(monster):
+	def Combatcheck(self, monster):
 		"""
 		makes Combat check  {fight + used weapons + monster combatrating (+game(AO, Environment), 
 		difficulty: monster thoughtness}
@@ -71,7 +72,7 @@ class Phase(object):
 		playerschoice(used weapons(including spells))
 		"""
 
-	def fightorflight(investigator, monster, evaded=[], throphies=[]):
+	def fightorflight(self, investigator, monster, evaded=[], throphies=[]):
 		"""
 		playerchoice(fight or flight)
 		Flight:
@@ -87,11 +88,19 @@ class Phase(object):
 		"""
 
 
-	def Monsterdamage(investigator, monster):
+	def Monsterdamage(self, investigator, monster):
 		"""
 		deals monster damage to investigator(spendEssence).
 		investigatorheathcheck
 		"""
+	def playerschoice(self, choices):
+		"""choices is a list, returns on of the objects in the list. later perhaps in own class."""
+		if len(choices) >= 0:
+			keuze = rnd.choice(choices)
+			print keuze
+			return keuze
+		return
+
 
 
 class Upkeep(Phase):
@@ -147,23 +156,33 @@ class Movement(Phase):
 			return
 		else:
 			self.gainMovement(investigator)
-		print "currentmoventpoints: ", investigator.movementpoints
 		while investigator.movementpoints > 0:
-			if isinstance(investigator.location, otherworld):
-				self.otherworldmovement()
-				investigator.gainmovement(0)
-			else:
-				pass
+			print "currentmoventpoints: ", investigator.movementpoints
+			print "currentlocation: ", investigator.location
+			# if isinstance(investigator.location, otherworld):
+			# 	self.otherworldmovement()
+			# 	investigator.gainmovement(0)
+			# else:
+			self.arkhammove(investigator, self.playerschoice(investigator.location.exits).location)
+			# this case only choose is to move, however player has more options. still needs some work
 
 
-	def arkhammove(self, game):
+	def arkhammove(self, investigator, newlocation):
 		"""
 		if monsters in currenlocation:
 			battlefield (monsters)
-			if movementpts > 0:
-				move
-				if gate move to otherworld
+		if movementpts > 0:
+			move
+			if gate move to otherworld
 		"""
+		if investigator.location.monsterinlocation():
+			self.battlefield(investigator)
+		if investigator.movementpoints > 0:	
+			investigator.move(newlocation)
+			if investigator.location.gateinlocation():
+				# get sucked into the gate
+				pass
+
 	def gainMovement(self, investigator):
 		"""player gains movementpoints equel to speed - Game(OA, environment)"""
 		investigator.gainmovement(investigator.skills.getskill("Speed")) #+ game.OA.skills + mythos.skill + ...

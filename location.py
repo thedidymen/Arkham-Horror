@@ -30,6 +30,7 @@ class location(object):
 		super(location, self).__init__()
 		self.name = name
 		self.expansion = expansion
+		self.gates = []
 		if investgatorlocation == True:
 			self.investigators = []
 		if monsterlocation == True:
@@ -37,6 +38,22 @@ class location(object):
 		self.exits = []
 	def __repr__(self):
 		return self.name
+	def monsterinlocation(self):
+		"""returns True if monster in location, else False"""
+		if hasattr(self, 'self.monsters'):
+			return len(self.monsters) > 0
+		else:
+			return False
+	def gateinlocation(self):
+		"""returns True if gate in location, else False"""
+		return len(self.gates) > 0
+	def arrive(self, investigator):
+		"""appends investigator to locations investigatorlist"""
+		self.investigators.append(investigator)
+	def depart(self, investigator):
+		"""Pops investigator form locations investigatorlist and returns the investigator"""
+		return self.investigators.pop(self.investigators.index(investigator))
+
 		
 		
 class Outskirt(location):
@@ -88,7 +105,7 @@ class otherworld(object):
 		self.expansion = expansion
 		self.left = []
 		self.right = []
-		self.encoutersOtherworld = deck()
+		# self.encoutersOtherworld = deck()
 
 
 if __name__ == '__main__':

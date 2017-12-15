@@ -84,6 +84,10 @@ if __name__ == '__main__':
 			occupation=investigator[2], stamina=investigator[4], sanity=investigator[5], focus=investigator[6], 
 			items=[], allies=[], skills=[], money=0, cluetokens=0, location=Agame.getlocation(investigator[3])))
 
+	for otherworld in data.Otherworlds:
+		Agame.locations.append(loc.otherworld(colors=otherworld[-1], expansion=otherworld[0], name=otherworld[1]))
+
+
 	Agame.Start()
 
 	# for investigator in Agame.investigators:
