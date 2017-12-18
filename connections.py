@@ -1,18 +1,21 @@
-
-		
-
-
-
-
-class Gate(object):
-	"""docstring for Gate"""
-	def __init__(self, location, dimension, modifier, otherworld, name, expansion):
-		super(Gate, self).__init__()
+class connection(object):
+	"""docstring for connection"""
+	def __init__(self, location, connectiontype):
+		super(connection, self).__init__()
 		self.location = location
+		self.connectiontype = connectiontype
+	def __repr__(self):
+		return str(self.location) + ": " + ", ".join([n for n in self.connectiontype])
+
+
+class Gate(connection):
+	"""docstring for Gate"""
+	def __init__(self, arkhamlocation, dimension, modi, location, name, expansion, connectiontype):
+		super(Gate, self).__init__(location, connectiontype)
 		self.dimension = dimension
-		self.modifier = modifier
-		self.otherworld = otherworld
-		self.name = self.otherworld.name
+		self.modi = modi
+		self.arkhamlocation = arkhamlocation
+		self.name = location.name
 		self.expansion = expansion
 
 

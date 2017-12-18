@@ -1,3 +1,23 @@
+class Dimension(object):
+	"""docstring for Dimension"""
+	def __init__(self, circle=False, triangle=False, cresentmoon=False, hexagon=False, square=False, diamond=False, star=False, slash=False, plus=False):
+		# [circle, triangle, cresentmoon, hexagon, square, diamond, star, slash, plus]
+		# [False, False, False, False, False, False, False, False, False]
+		super(Dimension, self).__init__()
+		self.dimensions = {
+		    "Circle" : circle,
+		    "Triangle" : triangle, 
+		    "Cresent Moon" : cresentmoon, 
+		    "Hexagon" : hexagon, 
+		    "Square" : square, 
+		    "Diamond" : diamond, 
+		    "Star" : star, 
+		    "Slash" : slash, 
+		    "Plus" : plus
+		}
+	def __repr__(self):
+		return ", ".join([key for key, value in self.dimensions.items() if value == True])
+
 class check(object):
 	"""docstring for check, its basicly a dict, so is the class necessary?  """
 	def __init__(self, will=0, fight=0, speed=0, sneak=0, lore=0, luck=0, horrorcheck=0, evadecheck=0, combatcheck=0):
@@ -46,3 +66,5 @@ class Investigatorskilltable(object):
 if __name__ == '__main__':
 	skil = check(will=1, fight=3)
 	print skil.skilldict
+	fth = Dimension(triangle = True, star = True)
+	print fth

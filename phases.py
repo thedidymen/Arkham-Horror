@@ -296,3 +296,11 @@ class Mythos(Phase):
 	def start(self):
 		""""""
 		print "Mythos time..."
+		Currentmythos = self.game.mythosdeck.drawCard()
+		print Currentmythos
+		if Currentmythos.gatelocation.seal:
+			print "Elder Sign"
+		elif Currentmythos.gatelocation.gateinlocation():
+			print "Monstersurge"
+		else:
+			print "spawngate, add doomtoken, bla bla"
