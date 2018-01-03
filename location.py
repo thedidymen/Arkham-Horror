@@ -22,7 +22,6 @@ class location(object):
 		super(location, self).__init__()
 		self.name = name
 		self.expansion = expansion
-		self.gates = []
 		if investgatorlocation == True:
 			self.investigators = []
 		if monsterlocation == True:
@@ -38,32 +37,32 @@ class location(object):
 			return False
 	def gateinlocation(self):
 		"""returns True if gate in location, else False"""
-		return len(self.gates) > 0
+		return self.gates != None
 	def arrive(self, investigator):
 		"""appends investigator to locations investigatorlist"""
 		self.investigators.append(investigator)
 	def depart(self, investigator):
 		"""Pops investigator form locations investigatorlist and returns the investigator"""
-		return self.investigators.pop(self.investigators.index(investigator))
+		self.investigators.remove(investigator)
 
 		
 		
 class Outskirt(location):
 	"""docstring for Outskirt"""
-	def __init__(self, name, investgatorlocation=False):
-		super(Outskirt, self).__init__()
+	def __init__(self, name, expansion, investgatorlocation=False):
+		super(Outskirt, self).__init__(name)
 
 
 class Sky(location):
 	"""docstring for Sky"""
-	def __init__(self, name, investgatorlocation=False):
-		super(Sky, self).__init__()
+	def __init__(self, name, expansion, investgatorlocation=False):
+		super(Sky, self).__init__(name)
 		
 
 class Lostintimeandspace(location):
 	"""docstring for Lostintimeandspace"""
-	def __init__(self, name, monsterlocation=False):
-		super(Lostintimeandspace, self).__init__()
+	def __init__(self, name, expansion, monsterlocation=False):
+		super(Lostintimeandspace, self).__init__(name, expansion)
 		
 
 class building(location):
@@ -73,11 +72,14 @@ class building(location):
 		self.neighborhood = neighborhood
 		self.stability = stability
 		if self.stability == False:
-			self.gates = []
 			self.seal = False
+		self.gate = None
 		# self.EncouterArkham = deck()
 		self.open = True
 		#self.buildingaction = buildingaction
+	def opengate(self, gate):
+		self.gate = gate
+
 		
 
 class street(location):
@@ -85,7 +87,7 @@ class street(location):
 	def __init__(self, name, expansion, neighborhood):
 		super(street, self).__init__(name, expansion)
 		self.neighborhood = neighborhood
-		self.gates = []
+		self.gate = None
 
 		
 class otherworld(object):
@@ -97,7 +99,25 @@ class otherworld(object):
 		self.expansion = expansion
 		self.left = []
 		self.right = []
+		self.gateexits = []
 		# self.encoutersOtherworld = deck()
+	def __repr__(self):
+		return self.name
+	def arriveleft(self, investigator):
+		"""appends investigator to otherworld left location"""
+		self.left.append(investigator)
+	def departleft(self, investigator):
+		"""Pops investigator form otherworld left location"""
+		self.left.remove(investigator)
+	def arriveright(self, investigator):
+		"""appends investigator to otherworld right location"""
+		self.right.append(investigator)
+	def departright(self, investigator):
+		"""Pops investigator form otherworld right location"""
+		self.right.remove(investigator)
+
+
+
 
 
 # if __name__ == '__main__':

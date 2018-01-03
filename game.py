@@ -5,6 +5,7 @@ import data
 import skill 
 import deck
 import connections
+import sys
 
 
 class Game(object):
@@ -19,6 +20,7 @@ class Game(object):
 		self.monstercup = []
 		self.monsteringame = []
 		self.mythosdeck = deck.Deck(name="Mythos")
+		self.doomtrack = 0 #needs to move to AO?
 		# self.commonitems = deck()
 		# self.uniqueitems = deck()
 		# self.spells = deck()
@@ -38,18 +40,25 @@ class Game(object):
 		"""
 	def Endgameandfinalscore(self):
 		"""calculates final score and closes cleans the game"""
+	def checkmonsterlimit(self):
+		""""""
 	def AncientOneAwake(self):
 		"""returns True when Ancient One is awake else False"""
 	def recallmonsters(self, dimension):
 		"""returns all monsters with dimension symbool to the monstercup"""
 	def FinalBattle(self):
 		"""When Ancient One awakes this initiates Final Battle based on game status. kicking off new class?"""
+		print "The Ancient One Awakes... The world burns"
+		sys.exit()
 	def Start(self):
 		"""loops over phases and whitin each phase (except Mythos) over the investigators, until Victory or AncientOneAwake is 
 		True. and kicks off appropriate subroutine."""
-		for i in range(50):
+		for i in range(20):
+			print
+			print
 			print "Round: ", i
 			for phase in self.phases:
+				print
 				for investigator in self.investigators:
 					phase.start(investigator)
 					if self.Victory():
@@ -84,6 +93,7 @@ if __name__ == '__main__':
 		Agame.investigators.append(inv.Investigator(forename=investigator[0], surname=investigator[1], 
 			occupation=investigator[2], stamina=investigator[4], sanity=investigator[5], focus=investigator[6], 
 			items=[], allies=[], skills=[], money=0, cluetokens=0, location=Agame.getlocation(investigator[3])))
+		Agame.getlocation(investigator[3]).arrive(Agame.investigators[-1])
 
 	for otherworld in data.Otherworlds:
 		Agame.locations.append(loc.otherworld(colors=otherworld[-1], expansion=otherworld[0], name=otherworld[1]))
@@ -100,6 +110,7 @@ if __name__ == '__main__':
 			blackdimension=skill.Dimension(circle=mythoscard[7][0], triangle=mythoscard[7][1], cresentmoon=mythoscard[7][2], hexagon=mythoscard[7][3], square=mythoscard[7][4], diamond=mythoscard[7][5], star=mythoscard[7][6], slash=mythoscard[7][7], plus=mythoscard[7][8]), 
 			text=mythoscard[8]
 			))
+	Agame.mythosdeck.shuffleDeck()
 
 	# for n in Agame.locations:
 	# 	for m in n.exits:
@@ -107,14 +118,25 @@ if __name__ == '__main__':
 
 	for gate in data.Gates:
 		# print type(gate[3])
-		Agame.gates.append(connections.Gate(
-			arkhamlocation=None, 
+		Agame.gates.append(connections.Gate( 
 			location=Agame.getlocation(gate[1]), 
 			dimension=skill.Dimension(gate[2]), 
-			modi=gate[3], 
+			modifier=gate[3], 
 			name=Agame.getlocation(gate[1]).name, 
 			expansion=gate[0], 
 			connectiontype=gate[4]))
+
+	# for gate in Agame.gates:
+	# 	print gate
+	# 	print gate.location
+
+	# for loc in Agame.locations:
+	# 	print
+	# 	print loc
+	# 	print loc.stability
+	# 	if loc.stability == False:
+	# 		print loc.seal
+	# 		print loc.gates
 
 	# print Agame.mythosdeck.Cards
 	# Agame.mythosdeck.shuffleDeck()

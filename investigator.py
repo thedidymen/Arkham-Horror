@@ -21,24 +21,16 @@ class Investigator(object):
 		self.movementpoints = 0
 		self.money = money
 		self.cluetokens = cluetokens
-		self.location = None
-		self.move(location)
+		self.location = location
 		self.monsterthrophies = []
 		self.gatethrophies = []
 		self.specials = []
 	def __repr__(self):
 		return "Investigator: " + self.forename + " " + self.surname
-	def move(self, newlocation):
+	def updatelocation(self, newlocation):
 		"""Pop investigator from current location, and moves self to newlocation, updates self.location. 
 		Does a self move for the start of the game"""
-		if self.location == None:
-			newlocation.arrive(self)
-			self.location = newlocation
-			return
-		else:
-			newlocation.arrive(self.location.depart(self))
 		self.location = newlocation
-		self.movementpoints -= 1
 	def changemoney(change):
 		"""adds or reduces amount of money, money cannot get negative"""
 	def changecluetokens(change):

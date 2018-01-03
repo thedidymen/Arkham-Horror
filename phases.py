@@ -1,4 +1,6 @@
 import random as rnd
+import os
+import location
 
 class Phase(object):
 	"""
@@ -86,7 +88,10 @@ class Phase(object):
 				MonsterDamage
 				fightorflight(investigator, monster)
 		"""
-
+	def drawmonster(self, gatelocation):
+		pass
+	def investigatoratgate(self, location):
+		pass
 
 	def Monsterdamage(self, investigator, monster):
 		"""
@@ -96,8 +101,8 @@ class Phase(object):
 	def playerschoice(self, choices):
 		"""choices is a list, returns on of the objects in the list. later perhaps in own class."""
 		if len(choices) >= 0:
+			rnd.seed()
 			keuze = rnd.choice(choices)
-			print keuze
 			return keuze
 		return
 
@@ -152,18 +157,19 @@ class Movement(Phase):
 		"""
 		print "Movement for:", investigator
 		if investigator.delayed:
-			investigator.delayed = True
+			investigator.delayed = False
 			return
 		else:
 			self.gainMovement(investigator)
 		while investigator.movementpoints > 0:
-			print "currentmoventpoints: ", investigator.movementpoints
-			print "currentlocation: ", investigator.location
-			# if isinstance(investigator.location, otherworld):
-			# 	self.otherworldmovement()
-			# 	investigator.gainmovement(0)
-			# else:
-			self.arkhammove(investigator, self.playerschoice(investigator.location.exits).location)
+			print "Currentmoventpoints: ", investigator.movementpoints
+			print "Currentlocation: ", investigator.location
+			if isinstance(investigator.location, location.otherworld):
+				investigator.movementpoints = 0
+				self.otherworldmovement(investigator)
+			else:
+				self.arkhammove(investigator, self.playerschoice([connection.location for connection in investigator.location.exits]))
+
 			# this case only choose is to move, however player has more options. still needs some work
 
 
@@ -175,18 +181,17 @@ class Movement(Phase):
 			move
 			if gate move to otherworld
 		"""
-		if investigator.location.monsterinlocation():
+		if len(investigator.location.monsters) > 0:
 			self.battlefield(investigator)
-		if investigator.movementpoints > 0:	
-			investigator.move(newlocation)
-			if investigator.location.gateinlocation():
-				# get sucked into the gate
-				pass
+		elif investigator.movementpoints > 0:
+			investigator.location.depart(investigator)
+			investigator.updatelocation(newlocation)
+			investigator.location.arrive(investigator)
+			investigator.movementpoints -= 1
+			if len(investigator.location.monsters) > 0 and investigator.movementpoints == 0:
+				self.battlefield(investigator)
 
-	def gainMovement(self, investigator):
-		"""player gains movementpoints equel to speed - Game(OA, environment)"""
-		investigator.gainmovement(investigator.skills.getskill("Speed")) #+ game.OA.skills + mythos.skill + ...
-	def otherworldmovement(self):
+	def otherworldmovement(self, investigator):
 		"""	
 		if investigator in investigator.location.left:
 			investigator.location.right = investigator.location.left.pop(investigator)
@@ -197,7 +202,21 @@ class Movement(Phase):
 			else:
 				lost in time and space
 		"""
-		print "otherworld movement"
+		if investigator in investigator.location.left:
+			investigator.location.departleft(investigator)
+			investigator.location.arriveright(investigator)
+		elif investigator in location.right:
+			investigator.location.departright(investigator)
+			investigator.movementpoints = 1
+			self.arkhammove(investigator, self.playerchoice(location.gates.arkhamlocation))
+			investigator.location.gate.explored.append(investigator)
+		else:
+			print "movement error"
+
+	def gainMovement(self, investigator):
+		"""player gains movementpoints equel to speed - Game(OA, environment)"""
+		investigator.gainmovement(investigator.skills.getskill("Speed")) #+ game.OA.skills + mythos.skill + ...
+
 	def specialcard(self):
 		"""do special card stuff"""
 	def gaincluetokens(self):
@@ -225,7 +244,21 @@ class ArkhamEncounter(Phase):
 		# if game.victory:  
 		# 	game.endgameandfinalscore()
 		"""
-		print "Arkham Encouter for:", investigator
+		if isinstance(investigator.location, location.otherworld):
+			print investigator, " in other dimension, no arkhamencouter"
+		else:
+			print "Arkham Encouter for:", investigator
+			if investigator.location.gate != None:
+				# explored options missing
+				print investigator.location
+				print investigator.location.gate
+				investigator.location.gate.location.arriveleft(investigator)
+				investigator.updatelocation(investigator.location.gate.location)
+			elif investigator.location.gate == None:
+				print "Arkham encounter thing at: ", investigator.location
+
+	
+
 	def Arkhamencouter():
 		"""
 		if in buildinglocation:
@@ -270,7 +303,10 @@ class OtherWorldEncounters(Phase):
 		"""
 		
 		"""
-		print "Otherworld Encouter for:", investigator
+		if isinstance(investigator.location, location.otherworld):
+			print "Otherworld Encouter for:", investigator
+		else:
+			print investigator, " in Arkham, no Otherworld Encounter"
 
 class Mythos(Phase):
 	"""
@@ -298,9 +334,40 @@ class Mythos(Phase):
 		print "Mythos time..."
 		Currentmythos = self.game.mythosdeck.drawCard()
 		print Currentmythos
-		if Currentmythos.gatelocation.seal:
-			print "Elder Sign"
-		elif Currentmythos.gatelocation.gateinlocation():
-			print "Monstersurge"
+		print "Gatelocation: ", Currentmythos.gatelocation
+
+		self.gatelocationstatus(Currentmythos.gatelocation)
+
+	def gatelocationstatus(self, gatelocation):
+		if gatelocation == None:
+			print "No gate this turn..."
+			return
+		elif hasattr(self, 'self.seal'):
+			if self.seal == True:
+				print "An Elder sign prevent a gate from opening."
+				return
+		elif gatelocation.gate != None:
+			self.monstersurge(gatelocation)
+		elif gatelocation.gate == None:
+			self.openingagate(gatelocation)
 		else:
-			print "spawngate, add doomtoken, bla bla"
+			print "Error: gatelocation status falls through"
+
+	def openingagate(self, gatelocation):
+		# no gates => final battle
+		print "!! look i opened a gate"
+		if len(self.game.gates) > 0:
+			print "a gate opened at ", gatelocation
+			gatelocation.gate = self.game.gates.pop(0) 
+			gatelocation.gate.arkhamopen(gatelocation)
+		else:
+			print "seems we're out of gates"
+
+	def monstersurge(self, gatelocation):
+		"""max(#player|#gates)*monsters appear form every gate. starting at gatelocation. 
+		(so that number of monsters is even everywhere?)"""
+		print "!! MONSTERSURGE"
+
+
+
+

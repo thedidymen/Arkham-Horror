@@ -10,13 +10,18 @@ class connection(object):
 
 class Gate(connection):
 	"""docstring for Gate"""
-	def __init__(self, arkhamlocation, dimension, modi, location, name, expansion, connectiontype):
+	def __init__(self, dimension, modifier, location, name, expansion, connectiontype):
 		super(Gate, self).__init__(location, connectiontype)
 		self.dimension = dimension
-		self.modi = modi
-		self.arkhamlocation = arkhamlocation
+		self.modifier = modifier
+		self.arkhamlocation = None
 		self.name = location.name
 		self.expansion = expansion
+		self.explored = []
+	def __repr__(self):
+		return str(self.arkhamlocation) + " to " + str(self.location)
+	def arkhamopen(self, arkhamlocation):
+		self.arkhamlocation = arkhamlocation
 
 
 class DevouringGate(Gate):
