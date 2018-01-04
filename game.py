@@ -53,7 +53,7 @@ class Game(object):
 	def Start(self):
 		"""loops over phases and whitin each phase (except Mythos) over the investigators, until Victory or AncientOneAwake is 
 		True. and kicks off appropriate subroutine."""
-		for i in range(20):
+		for i in range(50):
 			print
 			print
 			print "Round: ", i
@@ -65,6 +65,7 @@ class Game(object):
 						self.Endgameandfinalscore()
 					elif self.AncientOneAwake():
 						self.FinalBattle()
+			print
 			self.mythos.start()
 			self.newstartingplayer()
 	# temp:

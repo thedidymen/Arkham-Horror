@@ -22,6 +22,7 @@ class Gate(connection):
 		return str(self.arkhamlocation) + " to " + str(self.location)
 	def arkhamopen(self, arkhamlocation):
 		self.arkhamlocation = arkhamlocation
+		self.location.opengate(self)
 
 
 class DevouringGate(Gate):

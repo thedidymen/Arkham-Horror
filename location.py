@@ -79,6 +79,12 @@ class building(location):
 		#self.buildingaction = buildingaction
 	def opengate(self, gate):
 		self.gate = gate
+	def depart(self, investigator):
+		"""Pops investigator form locations investigatorlist and returns the investigator"""
+		self.investigators.remove(investigator)
+		if self.gate != None:
+			if investigator in self.gate.explored:
+				self.gate.explored.pop(self.gate.explored.index(investigator))
 
 		
 
@@ -88,6 +94,13 @@ class street(location):
 		super(street, self).__init__(name, expansion)
 		self.neighborhood = neighborhood
 		self.gate = None
+	def depart(self, investigator):
+		"""Pops investigator form locations investigatorlist and returns the investigator"""
+		self.investigators.remove(investigator)
+		if self.gate != None:
+			if investigator in self.gate.explored:
+				self.gate.explored.pop(self.gate.explored.index(investigator))
+
 
 		
 class otherworld(object):
@@ -99,7 +112,7 @@ class otherworld(object):
 		self.expansion = expansion
 		self.left = []
 		self.right = []
-		self.gateexits = []
+		self.gates = []
 		# self.encoutersOtherworld = deck()
 	def __repr__(self):
 		return self.name
@@ -115,6 +128,8 @@ class otherworld(object):
 	def departright(self, investigator):
 		"""Pops investigator form otherworld right location"""
 		self.right.remove(investigator)
+	def opengate(self, gate):
+		self.gates.append(gate)
 
 
 

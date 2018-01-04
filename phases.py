@@ -168,6 +168,7 @@ class Movement(Phase):
 				investigator.movementpoints = 0
 				self.otherworldmovement(investigator)
 			else:
+				
 				self.arkhammove(investigator, self.playerschoice([connection.location for connection in investigator.location.exits]))
 
 			# this case only choose is to move, however player has more options. still needs some work
@@ -191,6 +192,14 @@ class Movement(Phase):
 			if len(investigator.location.monsters) > 0 and investigator.movementpoints == 0:
 				self.battlefield(investigator)
 
+	def movetoarkham(self, investigator, newlocation):
+		investigator.location.departright(investigator)
+		investigator.updatelocation(newlocation)
+		investigator.location.arrive(investigator)
+		if len(investigator.location.monsters) > 0:
+			self.battlefield(investigator)
+
+
 	def otherworldmovement(self, investigator):
 		"""	
 		if investigator in investigator.location.left:
@@ -205,13 +214,11 @@ class Movement(Phase):
 		if investigator in investigator.location.left:
 			investigator.location.departleft(investigator)
 			investigator.location.arriveright(investigator)
-		elif investigator in location.right:
-			investigator.location.departright(investigator)
-			investigator.movementpoints = 1
-			self.arkhammove(investigator, self.playerchoice(location.gates.arkhamlocation))
+		elif investigator in investigator.location.right:
+			self.movetoarkham(investigator, self.playerschoice([gate.arkhamlocation for gate in investigator.location.gates]))
 			investigator.location.gate.explored.append(investigator)
 		else:
-			print "movement error"
+			print "Error: otherworld movement fell through........"
 
 	def gainMovement(self, investigator):
 		"""player gains movementpoints equel to speed - Game(OA, environment)"""
@@ -249,11 +256,11 @@ class ArkhamEncounter(Phase):
 		else:
 			print "Arkham Encouter for:", investigator
 			if investigator.location.gate != None:
-				# explored options missing
-				print investigator.location
-				print investigator.location.gate
-				investigator.location.gate.location.arriveleft(investigator)
-				investigator.updatelocation(investigator.location.gate.location)
+				if investigator in investigator.location.gate.explored:
+					print "well I should be closing this gate..."
+				else:
+					investigator.location.gate.location.arriveleft(investigator)
+					investigator.updatelocation(investigator.location.gate.location)
 			elif investigator.location.gate == None:
 				print "Arkham encounter thing at: ", investigator.location
 
@@ -355,11 +362,10 @@ class Mythos(Phase):
 
 	def openingagate(self, gatelocation):
 		# no gates => final battle
-		print "!! look i opened a gate"
 		if len(self.game.gates) > 0:
 			print "a gate opened at ", gatelocation
-			gatelocation.gate = self.game.gates.pop(0) 
-			gatelocation.gate.arkhamopen(gatelocation)
+			gatelocation.opengate(self.game.gates.pop(0)) #places gate in gatelocation
+			gatelocation.gate.arkhamopen(gatelocation) #sets arkham location in gate and open gate in otherworld
 		else:
 			print "seems we're out of gates"
 
