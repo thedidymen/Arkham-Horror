@@ -32,18 +32,18 @@ class Phase(object):
 		else:
 			succes = [5, 6]
 		return difficulty <= len([True for i in self.die(Numberofdie) if i in succes])
-	def InvestigatorHeathCheck(self):
-		"""
-		checks if player is still conscious. and sane?
-		Unconscious and insane => devoured
-		Unconscious => to hospital
-		Insane => Asylum
-		Needs games hospitals and asylums
-		PlayersChoice which
-		returns True if healthy, False if deported to Hospital or Asylum
-		"""
+	# def InvestigatorHeathCheck(self):
+	# 	"""
+	# 	checks if player is still conscious. and sane?
+	# 	Unconscious and insane => devoured
+	# 	Unconscious => to hospital
+	# 	Insane => Asylum
+	# 	Needs games hospitals and asylums
+	# 	PlayersChoice which
+	# 	returns True if healthy, False if deported to Hospital or Asylum
+	# 	"""
 
-	def Battlefield(self, investigator, evaded=[], throphies=[]):
+	def Battlefield(self, investigator):
 		"""
 		For monster in investigator.location.monsters:
 			PlayerChoice(Evade or Combat)
@@ -62,49 +62,129 @@ class Phase(object):
 		"""
 		# for i in range(1, 20):
 		# 	print self.Skillcheck(Numberofdie=i, difficulty=self.playerschoice(range(1, 4)), blessed=self.playerschoice([True, None, False]))
-		print "!! Battlefield between", investigator, "and"
+		evaded = []
+		throphies = []
+		currentlocation = investigator.location
 		for monster in investigator.location.monsters:
-			choice = self.playerschoice(['E', 'C'])
+			print investigator, "faces", monster
+			if investigator.location != currentlocation:
+				print investigator, "moved too", investigator.location
+				break
+			choice = self.playerschoice(['E', 'E', 'C'])
+			# print choice
 			if choice == 'E':
-				if self.Evadecheck(investigator=investigator, monster=monster):
+				# print "monster awarness:", monster.awareness, "investigator sneak", investigator.skills.getskill("Sneak"), "investigator evade", investigator.skills.getskill("Evadecheck")
+				evadeoutcome = self.Evadecheck(investigator=investigator, monster=monster)
+				if evadeoutcome:
+					print investigator, "evaded", monster
 					evaded.append(monster)
 					break
 				else:
-					self.Monsterdamage(investigator=investigator, monster=monster)
+					if self.monsterdamage(investigator=investigator, monster=monster):
+						print monster, "dealt damage too", investigator
+						break
 			investigator.movementpoints = 0
-			if self.Horrorcheck(investigator=investigator, monster=monster):
-				evaded, throphies = self.fightorflight(investigator=investigator, monster=monster, evaded=evaded, throphies=throphies)
+			horrorcheckoutcome = self.horrorcheck(investigator=investigator, monster=monster)
+			# print "monster horrorrating:", monster.horrorrating, "investigator will", investigator.skills.getskill("Will"), "investigator combatcheck", investigator.skills.getskill("Horrorcheck")
+			# print horrorcheckoutcome
+			if not horrorcheckoutcome:
+				print monster, "scared", investigator
+				self.horrordamage(investigator=investigator, monster=monster)
 			else:
-				print "!! The Horror.... ARRGhhhhhh...."
+				print investigator, "not frightend by", monster
+			if investigator.location != currentlocation:
+				print investigator, "moved too", investigator.location
+				break
+			if choice == 'C':
+				if self.combatcheck(investigator=investigator, monster=monster):
+					print investigator, "defeated", monster, "in combat"
+					throphies.append(monster)
+					break
+				else:
+					if self.monsterdamage(investigator=investigator, monster=monster):
+						print monster, "dealt damage too", investigator
+						break
+			evaded, throphies = self.fightorflight(investigator=investigator, monster=monster, evaded=evaded, throphies=throphies)
+			# print "monster combatrating:", monster.combatrating, "investigator fight", investigator.skills.getskill("Fight"), "investigator combatcheck", investigator.skills.getskill("Combatcheck")
+			# print self.Combatcheck(investigator=investigator, monster=monster)
+			# print
+		for throphie in throphies:
+			print investigator, "gained monsterthrophies of", throphie
+			investigator.monsterthrophies.append(investigator.location.monsters.pop(investigator.location.monsters.index(throphie)))
+			self.game.monsteringame.remove(throphie)
+			throphie.location = None
 
 
-	def Horrorcheck(self, investigator, monster):
+	def horrordamage(self, investigator, monster):
+		if monster.horrordamage == None:
+			print "!! special ability"
+			return
+		if investigator.changesanity(-monster.horrordamage):
+			return False
+		else:
+
+			self.game.monstercup.append(investigator.location.monsters.pop(investigator.location.monsters.index(monster)))
+			self.game.monsteringame.remove(monster)
+			monster.location = None
+			investigator.location.depart(investigator)
+			investigator.updatelocation(self.game.getlocation("Arkham Asylum"))
+			investigator.location.arrive(investigator)
+			print investigator, "seek care at", investigator.location
+			print monster, "returns to the cup"
+			if investigator.changesanity(10):
+				return True
+
+	def monsterdamage(self, investigator, monster):
+		"""
+		deals monster damage to investigator(spendEssence).
+		investigatorheathcheck
+		"""
+		if monster.combatdamage == None:
+			print "!! special ability"
+			return
+		if investigator.changestamina(-monster.combatdamage):
+			return False
+		else:
+			self.game.monstercup.append(investigator.location.monsters.pop(investigator.location.monsters.index(monster)))
+			self.game.monsteringame.remove(monster)
+			monster.location = None
+			investigator.location.depart(investigator)
+			investigator.updatelocation(self.game.getlocation("St. Mary's Hospital"))
+			investigator.location.arrive(investigator)
+			print investigator, "seek care at", investigator.location
+			print monster, "returns to the cup"
+			if investigator.changestamina(10):
+				return True
+
+	def horrorcheck(self, investigator, monster):
 		"""
 		Make a horrorcheck {will + monster horror rating, difficulty 1}
 		investigatorheathcheck
 		returns true if succesful
 		"""
-		print "!! oh the horror", monster
-		return self.Skillcheck(Numberofdie=investigator.skills.getskill("Will")+investigator.skills.getskill("Horrorcheck")-monster.horrorrating, difficulty=1, blessed=None)
+		if monster.horrorrating == None:
+			return True
+		return self.Skillcheck(Numberofdie=investigator.skills.getskill("Will")+investigator.skills.getskill("Horrorcheck")+monster.horrorrating, difficulty=1, blessed=None)
 
 	def Evadecheck(self, investigator, monster):
 		"""
 		Makes Evadecheck {sneak + monster awareness, difficulty 1}
 		returns true if succesful
 		"""
-		print "!! lucky me I evaded", monster
-		return self.Skillcheck(Numberofdie=investigator.skills.getskill("Sneak")+investigator.skills.getskill("Evadecheck")-monster.awareness, difficulty=1, blessed=None)
+		if monster.awareness == None:
+			return True
+		return self.Skillcheck(Numberofdie=investigator.skills.getskill("Sneak")+investigator.skills.getskill("Evadecheck")+monster.awareness, difficulty=1, blessed=None)
 
-
-	def Combatcheck(self, monster):
+	def combatcheck(self, investigator, monster):
 		"""
 		makes Combat check  {fight + used weapons + monster combatrating (+game(AO, Environment), 
 		difficulty: monster thoughtness}
 		returns true if succesful
 		playerschoice(used weapons(including spells))
 		"""
-		return self.Skillcheck(Numberofdie=investigator.skills.getskill("Fight")+investigator.skills.getskill("Combatcheck")-monster.horrorrating, difficulty=monster.thoughtness, blessed=None)
-
+		if monster.combatrating == None:
+			return True
+		return self.Skillcheck(Numberofdie=investigator.skills.getskill("Fight")+investigator.skills.getskill("Combatcheck")+monster.combatrating, difficulty=monster.toughness, blessed=None)
 
 	def fightorflight(self, investigator, monster, evaded=[], throphies=[]):
 		"""
@@ -120,20 +200,34 @@ class Phase(object):
 				MonsterDamage
 				fightorflight(investigator, monster)
 		"""
-		print "!! dancing around, bla bla"
-		return evaded, throphies
-	# def drawmonster(self, gatelocation):
-	# 	pass
-	# def investigatoratgate(self, location):
-	# 	pass
+		choice = self.playerschoice(['E','C'])
+		if choice == 'E':
+			if self.Evadecheck(investigator=investigator, monster=monster):
+				print investigator, "evaded", monster
+				evaded.append(monster)
+				return evaded, throphies
+			else:
+				if self.monsterdamage(investigator=investigator, monster=monster):
+					print monster, "dealt damage too", investigator
+					return evaded, throphies
+				else:
+					evaded, throphies = self.fightorflight(investigator=investigator, monster=monster, evaded=evaded, throphies=throphies)
+					return evaded, throphies
+		if choice == 'C':
+			if self.combatcheck(investigator=investigator, monster=monster):
+				print investigator, "defeated", monster, "in combat"
+				throphies.append(monster)
+				return evaded, throphies
+			else:
+				if self.monsterdamage(investigator=investigator, monster=monster):
+					print monster, "dealt damage too", investigator
+					return evaded, throphies
+				else:
+					evaded, throphies = self.fightorflight(investigator=investigator, monster=monster, evaded=evaded, throphies=throphies)
+					return evaded, throphies
 
-	def Monsterdamage(self, investigator, monster):
-		"""
-		deals monster damage to investigator(spendEssence).
-		investigatorheathcheck
-		"""
-		print "!! Ouch, you hurt me"
-		return
+
+
 	def playerschoice(self, choices):
 		"""choices is a list, returns on of the objects in the list. later perhaps in own class."""
 		if len(choices) >= 0:

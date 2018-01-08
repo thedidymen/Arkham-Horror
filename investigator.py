@@ -17,7 +17,7 @@ class Investigator(object):
 		self.delayed = False
 		self.items = items
 		self.allies = allies
-		self.skills = check(speed = 3, fight = 3, combatcheck = 3, will = 3) # temp value for speed, to get movement up and running
+		self.skills = check(speed = 3, fight = 3, combatcheck = 3, will = 3, sneak = 3) # temp value for speed, to get movement up and running
 		self.movementpoints = 0
 		self.money = money
 		self.cluetokens = cluetokens
@@ -31,21 +31,26 @@ class Investigator(object):
 		"""Pop investigator from current location, and moves self to newlocation, updates self.location. 
 		Does a self move for the start of the game"""
 		self.location = newlocation
-	def changemoney(change):
+	def changemoney(self, change):
 		"""adds or reduces amount of money, money cannot get negative"""
-	def changecluetokens(change):
+	def changecluetokens(self, change):
 		"""adds or reduces amount of cluetokens, cluetokens cannot get negative"""
-	def spendFocus(change):
+	def spendFocus(self, change):
 		"""spend focus up to the max focus"""
-	def gainFocus(change):
+	def gainFocus(self, change):
 		"""Gain focus to the max (depending on environment?)"""
-	def gainItems(item):
+	def gainItems(self, item):
 		"""add item to item-list"""
-	def loseItem(item):
+	def loseItem(self, item):
 		"""pop item from list, returns item?"""
 	def gainmovement(self, pts):
 		"""sets movement to pts. taks pts as interger. """
 		self.movementpoints = pts
+	def changesanity(self, change):
+		return self.sanity.SpendEssence(change)
+
+	def changestamina(self, change):
+		return self.stamina.SpendEssence(change)
 
 
 class SpendableEssence(object):
@@ -65,9 +70,13 @@ class SpendableEssence(object):
 			raise ValueError("Essence cannot be higher than MaxEssence or lower than 1")
 	def __repr__(self):
 		return self.Name + "[" + str(self.Essence) + "/" + str(self.MaxEssence) + "]"
-	def SpendEssence(change):
+	def SpendEssence(self, change):
 		"""Gain or lose Essence between 1 and max. returns True if succes or maxed out, False if drops to zero or lower. If somehow, 
 		stamina and sanity drops too, or below zero, player is devoured. """
+		self.Essence += change
+		if self.Essence > self.MaxEssence:
+			self.Essence = self.MaxEssence
+		return self.Essence >= 1
 
 		
 
