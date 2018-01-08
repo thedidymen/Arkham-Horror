@@ -17,7 +17,7 @@ class Investigator(object):
 		self.delayed = False
 		self.items = items
 		self.allies = allies
-		self.skills = check(speed = 3) # temp value for speed, to get movement up and running
+		self.skills = check(speed = 3, fight = 3, combatcheck = 3, will = 3) # temp value for speed, to get movement up and running
 		self.movementpoints = 0
 		self.money = money
 		self.cluetokens = cluetokens

@@ -44,6 +44,9 @@ class location(object):
 	def depart(self, investigator):
 		"""Pops investigator form locations investigatorlist and returns the investigator"""
 		self.investigators.remove(investigator)
+	def exithastype(self, type):
+		"""returns list of exit with a type of connection"""
+		return [exit for exit in self.exits if exit.hastype(type)]
 
 		
 		

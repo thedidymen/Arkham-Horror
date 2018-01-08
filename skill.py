@@ -17,6 +17,16 @@ class Dimension(object):
 		}
 	def __repr__(self):
 		return ", ".join([key for key, value in self.dimensions.items() if value == True])
+	def subsetoff(self, otherdimension):
+		"""Returns True if current dimension is subset of otherdimension."""
+		activedimensions = [key for key, value in self.dimensions.items() if value == True]
+		flag = True
+		for activedimension in activedimensions:
+			if not otherdimension.dimensions[activedimension]:
+				flag = False
+		return flag
+
+
 
 class check(object):
 	"""docstring for check, its basicly a dict, so is the class necessary?  """
@@ -29,7 +39,7 @@ class check(object):
 			"Sneak": sneak, 
 			"Lore": lore, 
 			"Luck": luck, 
-			"Horrocheck": horrorcheck, 
+			"Horrorcheck": horrorcheck, 
 			"Evadecheck": evadecheck, 
 			"Combatcheck": combatcheck
 			}

@@ -6,6 +6,11 @@ class connection(object):
 		self.connectiontype = connectiontype
 	def __repr__(self):
 		return str(self.location) + ": " + ", ".join([n for n in self.connectiontype])
+	def hastype(self, color):
+		if color in self.connectiontype:
+			return True
+		else:
+			return False
 
 
 class Gate(connection):

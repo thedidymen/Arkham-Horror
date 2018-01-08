@@ -14,18 +14,27 @@ class Phase(object):
 		super(Phase, self).__init__()
 	def die(self, numberofdie):
 		"""returns list of die results"""
+		return [rnd.randint(1,6) for i in range(numberofdie+1)]
 	def SumofSkills(self, ):
 		"""Adds skill modifiers of all components of the game: event, AO, Environment, items, investigator...."""
-	def Skillcheck(self, Skill, SumofSkills, numberofsucces, succes):
+	def Skillcheck(self, Numberofdie, difficulty, blessed=None):
 		"""
-		skill => the skill to check for
-		sumofskills => gives number of die for skill check
-		numberofsucces => hits needed
-		succes => what is a succes (format?) 
+		returns True if succeses of number of die match difficulty.
+		numberofdie => number of die to roll
+		difficulty => hits needed
+		blessed => None hits (5,6), True hits (4, 5, 6), False hits (6)
 		"""
+		# print "blessed", blessed, "difficulty", difficulty, "numberofdie", Numberofdie
+		if blessed:
+			succes = [4, 5, 6]
+		elif not blessed:
+			succes = [6]
+		else:
+			succes = [5, 6]
+		return difficulty <= len([True for i in self.die(Numberofdie) if i in succes])
 	def InvestigatorHeathCheck(self):
 		"""
-		checks if player is still conscious.
+		checks if player is still conscious. and sane?
 		Unconscious and insane => devoured
 		Unconscious => to hospital
 		Insane => Asylum
@@ -51,7 +60,23 @@ class Phase(object):
 		investigator => gain throphies
 		return
 		"""
-		pass
+		# for i in range(1, 20):
+		# 	print self.Skillcheck(Numberofdie=i, difficulty=self.playerschoice(range(1, 4)), blessed=self.playerschoice([True, None, False]))
+		print "!! Battlefield between", investigator, "and"
+		for monster in investigator.location.monsters:
+			choice = self.playerschoice(['E', 'C'])
+			if choice == 'E':
+				if self.Evadecheck(investigator=investigator, monster=monster):
+					evaded.append(monster)
+					break
+				else:
+					self.Monsterdamage(investigator=investigator, monster=monster)
+			investigator.movementpoints = 0
+			if self.Horrorcheck(investigator=investigator, monster=monster):
+				evaded, throphies = self.fightorflight(investigator=investigator, monster=monster, evaded=evaded, throphies=throphies)
+			else:
+				print "!! The Horror.... ARRGhhhhhh...."
+
 
 	def Horrorcheck(self, investigator, monster):
 		"""
@@ -59,12 +84,17 @@ class Phase(object):
 		investigatorheathcheck
 		returns true if succesful
 		"""
+		print "!! oh the horror", monster
+		return self.Skillcheck(Numberofdie=investigator.skills.getskill("Will")+investigator.skills.getskill("Horrorcheck")-monster.horrorrating, difficulty=1, blessed=None)
 
 	def Evadecheck(self, investigator, monster):
 		"""
 		Makes Evadecheck {sneak + monster awareness, difficulty 1}
 		returns true if succesful
 		"""
+		print "!! lucky me I evaded", monster
+		return self.Skillcheck(Numberofdie=investigator.skills.getskill("Sneak")+investigator.skills.getskill("Evadecheck")-monster.awareness, difficulty=1, blessed=None)
+
 
 	def Combatcheck(self, monster):
 		"""
@@ -73,6 +103,8 @@ class Phase(object):
 		returns true if succesful
 		playerschoice(used weapons(including spells))
 		"""
+		return self.Skillcheck(Numberofdie=investigator.skills.getskill("Fight")+investigator.skills.getskill("Combatcheck")-monster.horrorrating, difficulty=monster.thoughtness, blessed=None)
+
 
 	def fightorflight(self, investigator, monster, evaded=[], throphies=[]):
 		"""
@@ -88,16 +120,20 @@ class Phase(object):
 				MonsterDamage
 				fightorflight(investigator, monster)
 		"""
-	def drawmonster(self, gatelocation):
-		pass
-	def investigatoratgate(self, location):
-		pass
+		print "!! dancing around, bla bla"
+		return evaded, throphies
+	# def drawmonster(self, gatelocation):
+	# 	pass
+	# def investigatoratgate(self, location):
+	# 	pass
 
 	def Monsterdamage(self, investigator, monster):
 		"""
 		deals monster damage to investigator(spendEssence).
 		investigatorheathcheck
 		"""
+		print "!! Ouch, you hurt me"
+		return
 	def playerschoice(self, choices):
 		"""choices is a list, returns on of the objects in the list. later perhaps in own class."""
 		if len(choices) >= 0:
@@ -167,8 +203,7 @@ class Movement(Phase):
 			if isinstance(investigator.location, location.otherworld):
 				investigator.movementpoints = 0
 				self.otherworldmovement(investigator)
-			else:
-				
+			else:	
 				self.arkhammove(investigator, self.playerschoice([connection.location for connection in investigator.location.exits]))
 
 			# this case only choose is to move, however player has more options. still needs some work
@@ -183,21 +218,21 @@ class Movement(Phase):
 			if gate move to otherworld
 		"""
 		if len(investigator.location.monsters) > 0:
-			self.battlefield(investigator)
-		elif investigator.movementpoints > 0:
+			self.Battlefield(investigator)
+		if investigator.movementpoints > 0:
 			investigator.location.depart(investigator)
 			investigator.updatelocation(newlocation)
 			investigator.location.arrive(investigator)
 			investigator.movementpoints -= 1
 			if len(investigator.location.monsters) > 0 and investigator.movementpoints == 0:
-				self.battlefield(investigator)
+				self.Battlefield(investigator)
 
 	def movetoarkham(self, investigator, newlocation):
 		investigator.location.departright(investigator)
 		investigator.updatelocation(newlocation)
 		investigator.location.arrive(investigator)
 		if len(investigator.location.monsters) > 0:
-			self.battlefield(investigator)
+			self.Battlefield(investigator)
 
 
 	def otherworldmovement(self, investigator):
@@ -215,8 +250,10 @@ class Movement(Phase):
 			investigator.location.departleft(investigator)
 			investigator.location.arriveright(investigator)
 		elif investigator in investigator.location.right:
+			print "Searching for a way back from", investigator.location
 			self.movetoarkham(investigator, self.playerschoice([gate.arkhamlocation for gate in investigator.location.gates]))
 			investigator.location.gate.explored.append(investigator)
+			print investigator, "has arrived back in arkham,", investigator.location
 		else:
 			print "Error: otherworld movement fell through........"
 
@@ -344,6 +381,23 @@ class Mythos(Phase):
 		print "Gatelocation: ", Currentmythos.gatelocation
 
 		self.gatelocationstatus(Currentmythos.gatelocation)
+		self.monstermove(whitedimension=Currentmythos.whitedimension, blackdimension=Currentmythos.blackdimension)
+
+	def monstermove(self, whitedimension, blackdimension):
+		# movementtypes = ['black', 'white', 'orange(aquatic)', 'blue(flying)', ]
+		#  needs seperating special moves form basic move or something ;)
+		for monster in self.game.monsteringame:
+			print monster, "currently at", monster.location,
+			if monster.dimension.subsetoff(whitedimension):
+				monster.move('white')
+				print "moved to", monster.location
+			elif monster.dimension.subsetoff(blackdimension):
+				monster.move('black')
+				print "moved to", monster.location
+			else:
+				print	
+
+
 
 	def gatelocationstatus(self, gatelocation):
 		if gatelocation == None:
@@ -356,7 +410,9 @@ class Mythos(Phase):
 		elif gatelocation.gate != None:
 			self.monstersurge(gatelocation)
 		elif gatelocation.gate == None:
+			self.game.doomtrack += 1
 			self.openingagate(gatelocation)
+			gatelocation.cluetokens = 0
 		else:
 			print "Error: gatelocation status falls through"
 
@@ -366,6 +422,13 @@ class Mythos(Phase):
 			print "a gate opened at ", gatelocation
 			gatelocation.opengate(self.game.gates.pop(0)) #places gate in gatelocation
 			gatelocation.gate.arkhamopen(gatelocation) #sets arkham location in gate and open gate in otherworld
+			if len(gatelocation.investigators) > 0:
+				for investigator in gatelocation.investigators:
+					print investigator, "at", gatelocation, "gets sucked into gate to", gatelocation.gate.location, "and is delayed."
+					investigator.location.gate.location.arriveleft(investigator)
+					investigator.updatelocation(investigator.location.gate.location)
+					investigator.delayed = True
+			self.spawnmonster(gatelocation)
 		else:
 			print "seems we're out of gates"
 
@@ -373,6 +436,17 @@ class Mythos(Phase):
 		"""max(#player|#gates)*monsters appear form every gate. starting at gatelocation. 
 		(so that number of monsters is even everywhere?)"""
 		print "!! MONSTERSURGE"
+
+	def spawnmonster(self, location):
+		if len(self.game.monstercup):
+			monster = self.game.monstercup.pop(0)
+			self.game.monsteringame.append(monster)
+			location.monsters.append(monster)
+			monster.arrive(location)
+			print location.monsters[-1], "has arrived at", location
+		else:
+			print "Monsterproduction has halted, please send for reenforcements."
+		return
 
 
 

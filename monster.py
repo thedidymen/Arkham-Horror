@@ -16,6 +16,15 @@ class Monster(object):
 		self.flavortext = flavortext
 		self.text = text
 		self.location = None
+	def __repr__(self):
+		return self.name
+	def arrive(self, location):
+		self.location = location
+	def move(self, color):
+		newlocation = self.location.exithastype(color)[0]
+		newlocation.location.monsters.append(self.location.monsters.pop(self.location.monsters.index(self)))
+		self.location = newlocation.location
+
 
 
 class Yellow(Monster):

@@ -6,6 +6,8 @@ import skill
 import deck
 import connections
 import sys
+import monster as mon
+import random as rnd
 
 
 class Game(object):
@@ -127,6 +129,19 @@ if __name__ == '__main__':
 			expansion=gate[0], 
 			connectiontype=gate[4]))
 
+	m = []
+
+	for monster in data.monsters:
+		for count in data.monsterscount:
+			if monster[0] == count[1]:
+				for i in range(count[2]):
+					dimensiondict = skill.Dimension(circle=monster[3], triangle=monster[3][1], cresentmoon=monster[3][2], hexagon=monster[3][3], square=monster[3][4], diamond=monster[3][5], star=monster[3][6], slash=monster[3][7], plus=monster[3][8])
+					m.append(mon.Monster(movement=monster[2], toughness=monster[5], dimension=dimensiondict, expansion=monster[1], horrorrating=monster[7], horrordamage=monster[8], combatrating=monster[9], combatdamage=monster[10], abilities=monster[11], awareness=monster[6], name=monster[0], flavortext="", text=""))
+
+	rnd.shuffle(m)
+	Agame.monstercup = m
+
+
 	# for gate in Agame.gates:
 	# 	print gate
 	# 	print gate.location
@@ -142,6 +157,12 @@ if __name__ == '__main__':
 	# print Agame.mythosdeck.Cards
 	# Agame.mythosdeck.shuffleDeck()
 	# print Agame.mythosdeck.Cards
+	
+	# for investigator in Agame.investigators:
+	# 	print investigator
+	# 	print investigator.skills.getskill("Fight")
+	# 	print investigator.skills.getskill("Combatcheck")
+	# 	print investigator.skills.getskill("Will")
 	
 	Agame.Start()
 
