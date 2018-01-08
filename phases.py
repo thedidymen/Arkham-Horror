@@ -87,6 +87,27 @@ class Phase(object):
 			horrorcheckoutcome = self.horrorcheck(investigator=investigator, monster=monster)
 			# print "monster horrorrating:", monster.horrorrating, "investigator will", investigator.skills.getskill("Will"), "investigator combatcheck", investigator.skills.getskill("Horrorcheck")
 			# print horrorcheckoutcome
+
+# error:
+# Movement for: Investigator: Harvey Walters
+# Currentmoventpoints:  3
+# Currentlocation:  Woods
+# Currentmoventpoints:  2
+# Currentlocation:  Uptown
+# Investigator: Harvey Walters faces Gug
+# Investigator: Harvey Walters not frightend by Gug
+# Investigator: Harvey Walters evaded Gug
+# Movement for: Investigator: Agnes Baker
+
+# error:2
+# Investigator: Jenny Barnes faces Formless Spawn
+# Formless Spawn scared Investigator: Jenny Barnes
+# Investigator: Jenny Barnes seek care at St. Mary's Hospital
+# Formless Spawn returns to the cup
+# Formless Spawn dealt damage too Investigator: Jenny Barnes
+# Movement for: Investigator: Harvey Walters
+
+
 			if not horrorcheckoutcome:
 				print monster, "scared", investigator
 				self.horrordamage(investigator=investigator, monster=monster)
