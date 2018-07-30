@@ -496,6 +496,7 @@ class Mythos(Phase):
 		print "Gatelocation: ", Currentmythos.gatelocation
 
 		self.gatelocationstatus(Currentmythos.gatelocation)
+		self.placecluetoken(Currentmythos.cluelocation)
 		self.monstermove(whitedimension=Currentmythos.whitedimension, blackdimension=Currentmythos.blackdimension)
 
 	def monstermove(self, whitedimension, blackdimension):
@@ -511,6 +512,9 @@ class Mythos(Phase):
 				print "moved to", monster.location
 			else:
 				print	
+
+	def placecluetoken(self, location):
+		
 
 
 
@@ -536,6 +540,7 @@ class Mythos(Phase):
 		if len(self.game.gates) > 0:
 			print "a gate opened at ", gatelocation
 			gatelocation.opengate(self.game.gates.pop(0)) #places gate in gatelocation
+			self.game.gatesingame.append(gatelocation.gate)
 			gatelocation.gate.arkhamopen(gatelocation) #sets arkham location in gate and open gate in otherworld
 			if len(gatelocation.investigators) > 0:
 				for investigator in gatelocation.investigators:
@@ -544,6 +549,8 @@ class Mythos(Phase):
 					investigator.updatelocation(investigator.location.gate.location)
 					investigator.delayed = True
 			self.spawnmonster(gatelocation)
+			if len(self.game.investigators) > 4:
+				self.spawnmonster
 		else:
 			print "seems we're out of gates"
 
@@ -551,9 +558,11 @@ class Mythos(Phase):
 		"""max(#player|#gates)*monsters appear form every gate. starting at gatelocation. 
 		(so that number of monsters is even everywhere?)"""
 		print "!! MONSTERSURGE"
+		numberofmonsters = max(len(self.game.investigators), len(self.game.gatesingame))
+		print "Arkham is flooded by ", numberofmonsters, "monsters"
 
 	def spawnmonster(self, location):
-		if len(self.game.monstercup):
+		if len(self.game.monstercup) > 0:
 			monster = self.game.monstercup.pop(0)
 			self.game.monsteringame.append(monster)
 			location.monsters.append(monster)

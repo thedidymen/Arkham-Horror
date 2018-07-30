@@ -19,6 +19,7 @@ class Game(object):
 		self.investigators = []
 		self.locations = []
 		self.gates = []
+		self.gatesingame = []
 		self.monstercup = []
 		self.monsteringame = []
 		self.mythosdeck = deck.Deck(name="Mythos")
